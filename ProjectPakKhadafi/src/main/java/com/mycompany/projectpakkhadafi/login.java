@@ -17,16 +17,17 @@ public class login extends javax.swing.JFrame {
 
     public login() {
         initComponents();
+        
         // Menambahkan ActionListener ke tombol login
         loginbutton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+             public void actionPerformed(ActionEvent e) {
                 performLogin();
             }
         });
     }
 
-    private void performLogin() {
+       private void performLogin() {
         String username = emailLogin.getText();
         String password = new String(loginPassword.getPassword());
 
@@ -38,25 +39,41 @@ public class login extends javax.swing.JFrame {
             try {
                 conn = DriverManager.getConnection(url, user, dbPassword);
                 System.out.println("Koneksi berhasil");
-
-                String sql = "SELECT * FROM login WHERE username = ? AND password = ?";
-                PreparedStatement statement = conn.prepareStatement(sql);
-                statement.setString(1, username);
-                statement.setString(2, password);
-
-                ResultSet result = statement.executeQuery();
-
-                if (result.next()) {
-                    JOptionPane.showMessageDialog(null, "Login Berhasil");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Login gagal, username dan password salah!");
-                }
-
-                statement.close();
             } catch (SQLException ex) {
                 System.out.println("Koneksi gagal: " + ex.getMessage());
+                return;
             }
         }
+
+        try {
+            String sql = "SELECT * FROM login WHERE username = ? AND password = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, username);
+            statement.setString(2, password);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                JOptionPane.showMessageDialog(null, "Login Berhasil");
+
+                Utama utama = new Utama();
+                utama.setVisible(true);
+                utama.setLocationRelativeTo(null);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Login gagal, username dan password salah!");
+            }
+
+            statement.close();
+        } catch (SQLException ex) {
+            System.out.println("Koneksi gagal: " + ex.getMessage());
+        }
+    }
+     private void refreshPage() {
+        home Home = new home();
+        Home.setVisible(true);// Membuka frame baru yang sama
+        Home.setLocationRelativeTo(null);
+        this.dispose(); // Menutup frame saat ini
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -73,6 +90,7 @@ public class login extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton1.setIcon(new javax.swing.ImageIcon("C:\\Users\\rizqi\\Documents\\ProjectPakKhadafi\\src\\image\\back login.png")); // NOI18N
+        jButton1.setBorder(null);
         jButton1.setContentAreaFilled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -81,11 +99,13 @@ public class login extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 10, -1, -1));
 
+        emailLogin.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         emailLogin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         getContentPane().add(emailLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 300, 440, 40));
 
+        loginPassword.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         loginPassword.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        getContentPane().add(loginPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 418, 440, 40));
+        getContentPane().add(loginPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 418, 430, 40));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -103,7 +123,13 @@ public class login extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 560, 520, 90));
 
         loginbutton.setIcon(new javax.swing.ImageIcon("C:\\Users\\rizqi\\Documents\\ProjectPakKhadafi\\src\\image\\log in tombol.png")); // NOI18N
+        loginbutton.setBorder(null);
         loginbutton.setContentAreaFilled(false);
+        loginbutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginbuttonActionPerformed(evt);
+            }
+        });
         getContentPane().add(loginbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 510, -1, 50));
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\rizqi\\Documents\\ProjectPakKhadafi\\src\\image\\log in panel.png")); // NOI18N
@@ -113,9 +139,12 @@ public class login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        home Home = new home();
-        Home.setVisible(true);
+        refreshPage();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void loginbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginbuttonActionPerformed
+      
+    }//GEN-LAST:event_loginbuttonActionPerformed
 
     /**
      * @param args the command line arguments
